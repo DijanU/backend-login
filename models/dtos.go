@@ -23,6 +23,12 @@ type LoginSuccessData struct {
 	Username string `json:"username"`
 }
 
+type LoginSuccessDataWithToken struct {
+	Token    string `json:"token"`
+	Username string `json:"username"`
+	UserID   int64  `json:"userId"`
+}
+
 // RegisterSuccessData defines the structure for the data returned on successful registration.
 type RegisterSuccessData struct {
 	UserID   int64  `json:"userId"`
@@ -42,7 +48,7 @@ type ErrorDetail struct {
 // It clearly indicates success and includes either data or error details.
 type APIResponse struct {
 	Success bool         `json:"success"`
-	Data    any          `json:"data,omitempty"`    // Use 'any' (Go 1.18+) or interface{} for flexibility
+	Data    any          `json:"data,omitempty"`  // Use 'any' (Go 1.18+) or interface{} for flexibility
 	Error   *ErrorDetail `json:"error,omitempty"` // Pointer allows omitting the field if there's no error
 }
 
@@ -50,11 +56,10 @@ type APIResponse struct {
 
 // NewSuccessResponse creates a standard success response with data.
 // It acts like a constructor for successful APIResponse instances.
-func NewSuccessResponse(data any) APIResponse {
+func NewSuccessResponse(data interface{}) APIResponse {
 	return APIResponse{
 		Success: true,
 		Data:    data,
-		Error:   nil, // Explicitly nil, will be omitted by json tag
 	}
 }
 
@@ -69,4 +74,3 @@ func NewErrorResponse(errorMessage string) APIResponse {
 		},
 	}
 }
-
